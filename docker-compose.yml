@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  dab-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dab-production
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - PROJECT_NAME=DAB Analytical Engine
+      - DATABASE_URL=sqlite:////app/data/dab_production.db
+      - UPLOAD_DIR=/app/data/uploads
+      - CORS_ORIGINS=http://localhost:5173,http://localhost:8000,http://127.0.0.1:8000
+      - SECRET_KEY=replace-with-a-secure-random-key-in-production
+      - DEBUG=false
+    volumes:
+      # Persistent storage for uploads, reports, and database
+      - dab-data:/app/data
+
+volumes:
+  dab-data:
+    driver: local
